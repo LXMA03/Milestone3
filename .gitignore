@@ -1,0 +1,53 @@
+### Node ###
+node_modules/
+**/node_modules/
+
+### Logs ###
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+### Runtime ###
+pids
+*.pid
+*.seed
+*.pid.lock
+
+### Environment files ###
+.env
+.env.*.local
+
+### OS ###
+.DS_Store
+Thumbs.db
+
+### IDEs / editors ###
+.vscode/
+.idea/
+
+### Build outputs ###
+dist/
+build/
+/.cache/
+gui/build/
+gui/dist/
+backend/build/
+
+### SQLite ###
+*.sqlite
+db/*.sqlite
+
+### Coverage ###
+coverage/
+.nyc_output/
+
+### Vite ###
+.vite/
+node_modules/.vite
+
+### TypeScript ###
+*.tsbuildinfo
+
+### Misc ###
+*.log
