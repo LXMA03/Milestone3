@@ -6,4 +6,6 @@ export default [
 	route("checkout", "routes/checkout.tsx"),
 	route("checkin", "routes/checkin.tsx"),
 	route("fines", "routes/fines.tsx"),
-] satisfies RouteConfig;
+	route("librarian-login", "routes/LibrarianSide/librarian-login.tsx"),
+	route("lib-fines", "routes/LibrarianSide/lib-fines.tsx"),
+	] satisfies RouteConfig;
