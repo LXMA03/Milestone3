@@ -32,6 +32,25 @@ node backend/build-books-db.js ./data/my-books.sqlite
 BOOKS_DB=./data/my-books.sqlite node backend/build-books-db.js
 ```
 
+CSV data (optional)
+ - By default the build script looks for CSV files in `backend/data`. You can either copy your CSVs into that folder or point the script at another directory via the `CSV_DIR` environment variable.
+ - Expected CSV filenames (place them in `backend/data`):
+   - `authors.csv`
+   - `book.csv`
+   - `book_authors_unique.csv` (use this unique mapping file)
+   - `borrowers_noheader.csv`
+ - Example: copy CSVs into the project-local data folder and run the build:
+```bash
+mkdir -p backend/data
+cp /path/to/your/csvs/{authors.csv,book.csv,book_authors_unique.csv,borrowers_noheader.csv} backend/data/
+node backend/build-books-db.js
+```
+ - Or run the script against a custom CSV directory:
+```bash
+CSV_DIR=/full/path/to/csvs node backend/build-books-db.js
+```
+ - Do NOT commit CSVs with private data (SSNs/addresses) to your git repository. Keep them out of source control or provide a small anonymized sample in `backend/data/sample/` if you want a repo-friendly example.
+
 2) Run the backend server
 
 Install backend dependencies (only required once):
