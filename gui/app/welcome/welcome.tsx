@@ -35,7 +35,7 @@ export function Welcome() {
                 to="/fines"
                 className="block text-center rounded p-3 bg-blue-600 text-white hover:bg-green-700"
               >
-                Check/ Pay Fines
+                Check Fines
               </Link>
             </div>
           </nav>

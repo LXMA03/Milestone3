@@ -117,9 +117,9 @@ export default function LibFines() {
       </form>
 
       {fines !== null && (
-        <div className="max-w-md p-4 border border-gray-300 rounded bg-gray-50">
-          <h2 className="text-lg font-semibold mb-2">Fine Details</h2>
-          <p className="mb-4">
+        <div className="max-w-[300px] mx-auto rounded-3xl border border-gray-200 p-6 dark:border-gray-700">
+          <h2 className="text-lg font-semibold mb-4 text-center">Fine Details</h2>
+          <p className="mb-6 text-center leading-6 text-gray-700 dark:text-gray-200">
             <strong>Total Fines:</strong> ${fines.total_fine.toFixed(2)}
           </p>
 
@@ -128,14 +128,21 @@ export default function LibFines() {
               <button
                 type="submit"
                 disabled={paying}
-                className="rounded-3xl border border-gray-200 p-6 dark:border-gray-700 space-y-4"
+                className="w-full px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:bg-gray-400 mb-2"
               >
                 {paying ? "Processing..." : "Pay Fines"}
               </button>
             </form>
           ) : (
-            <p className="text-green-600 font-semibold">No outstanding fines!</p>
+            <p className="text-center text-green-600 font-semibold">No outstanding fines!</p>
           )}
+
+          <button
+            type="button"
+            className="w-full px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 mt-4"
+          >
+            Load Payment
+          </button>
         </div>
       )}
     </main>
