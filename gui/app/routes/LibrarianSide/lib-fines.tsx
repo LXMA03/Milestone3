@@ -13,6 +13,8 @@ export default function LibFines() {
   const [fines, setFines] = useState<{ card_id?: number; total_fine: number } | null>(null);
   const [paying, setPaying] = useState(false);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [refreshMessage, setRefreshMessage] = useState<string | null>(null);
 
   async function checkFines(e: React.FormEvent) {
     e.preventDefault();
@@ -23,6 +25,7 @@ export default function LibFines() {
 
     setLoading(true);
     setError(null);
+    setRefreshMessage(null);
     setFines(null);
     setPaymentSuccess(false);
 
@@ -54,6 +57,7 @@ export default function LibFines() {
 
     setPaying(true);
     setError(null);
+    setRefreshMessage(null);
     setPaymentSuccess(false);
 
     try {
@@ -77,6 +81,69 @@ export default function LibFines() {
     }
   }
 
+  async function refreshAllFines() {
+    setRefreshing(true);
+    setError(null);
+    setPaymentSuccess(false);
+    setRefreshMessage(null);
+
+    try {
+      const response = await fetch("http://localhost:3000/api/fines/refresh", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to refresh fines");
+      }
+
+      const data = await response.json();
+      const insertedReturned = data.insertedReturned ?? 0;
+      const insertedUnreturned = data.insertedUnreturned ?? 0;
+      const updated = data.updated ?? 0;
+
+      setRefreshMessage(
+        `Fines updated. New returned fines: ${insertedReturned}, new unreturned fines: ${insertedUnreturned}, updated existing fines: ${updated}.`,
+      );
+    } catch (err: any) {
+      setError(err.message || "Error refreshing fines");
+    } finally {
+      setRefreshing(false);
+    }
+  }
+
+  async function reloadBorrowerFines() {
+    if (!cardId.trim()) {
+      setError("Please enter a card ID");
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+    setPaymentSuccess(false);
+
+    try {
+      const numericCardId = parseInt(String(cardId).replace(/^ID/i, "").replace(/^0+/, ""), 10);
+      if (Number.isNaN(numericCardId)) {
+        setError("Invalid card ID");
+        setLoading(false);
+        return;
+      }
+
+      const response = await fetch(`http://localhost:3000/api/borrower/${numericCardId}/fines`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch fines");
+      }
+
+      const data = await response.json();
+      setFines(data);
+    } catch (err: any) {
+      setError(err.message || "Error checking fines");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <main className="pt-16 p-4 container mx-auto">
       <div className="flex justify-between items-center mb-4">
@@ -86,9 +153,26 @@ export default function LibFines() {
         </Link>
       </div>
 
+      <div className="mb-4 flex flex-wrap gap-2">
+        <button
+          type="button"
+          onClick={refreshAllFines}
+          disabled={loading || paying || refreshing}
+          className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 disabled:bg-gray-400"
+        >
+          {refreshing ? "Refreshing fines..." : "Refresh All Fines"}
+        </button>
+      </div>
+
       {error && (
         <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
           {error}
+        </div>
+      )}
+
+      {refreshMessage && (
+        <div className="mb-4 p-3 bg-blue-100 border border-blue-400 text-blue-700 rounded">
+          {refreshMessage}
         </div>
       )}
 
@@ -139,9 +223,10 @@ export default function LibFines() {
 
           <button
             type="button"
+            onClick={reloadBorrowerFines}
             className="w-full px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 mt-4"
           >
-            Load Payment
+            Reload Borrower Fines
           </button>
         </div>
       )}

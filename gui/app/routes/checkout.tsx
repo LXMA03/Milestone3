@@ -118,7 +118,6 @@ export default function Checkout() {
         setRegSsn("");
         setRegAddress("");
         setRegPhone("");
-        setShowRegister(false);
       } else {
         setRegError(data.message || "Registration failed");
       }
